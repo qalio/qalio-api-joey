@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package joey.v1;
+
+import "proto/v1/common/utils.proto";
+
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+message DeliveryStatusUpdate {
+  string delivery_id = 1;
+  string status = 2; // e.g., "in_transit", "delivered", "failed"
+  Location current_location = 3;
+  string estimated_arrival_time = 4;
+}
+
+message RouteOptimizationRequest {
+  string origin = 1;
+  string destination = 2;
+  repeated Location waypoints = 3;
+}
+
+message RouteOptimizationResponse {
+  repeated Location optimized_route = 1;
+  string estimated_travel_time = 2;
+}
+
+message StatusUpdateRequest {
+  string delivery_id = 1;
+  string driver_id = 2;
+  string status = 3; // e.g., "in_transit", "delivered"
+}
+
+message StatusUpdateResponse {
+  bool success = 1;
+}
+
+service TrackingService {
+  rpc GetRouteOptimization(RouteOptimizationRequest) returns (RouteOptimizationResponse);
+  rpc UpdateDeliveryStatus(StatusUpdateRequest) returns (StatusUpdateResponse);
+}
